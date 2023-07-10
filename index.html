@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>weather_app</title>
+        <!--bootstrap icon-->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
+         <!---bootstarp-5 cdn ---->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+        <!--own stylesheet-->
+        <link rel="stylesheet" href="./asset/css/stylesheet.css">
+        <style>
+          .text-grey{
+            color: rgb(135, 129, 129);
+          }
+          .border-none{
+            border: none;
+            outline-width: 0;
+          }
+          .bg-cylik{
+            background: rgb(6, 148, 188);
+          }
+          .color-yellow{
+            color: rgb(243, 243, 16);
+          }
+          .bg-yellow{
+            background: yellow;
+          }
+
+           
+        </style>
+    </head>
+<body>
+    <section class="container w-50 m-auto bg-info mt-5 p-3">
+      <div class="text-center d-flex justify-content-center">
+        <input id="cityName" type="text" placeholder="dhaka" class="px-2 py-1 text-grey border-none">
+        <div class="mx-1">
+          <button id="" onclick="serchButton()" class="fs-5 px-4 py-0 border-none text-white bg-cylik ">serch</button>
+        </div>
+      </div>
+      <div class="d-flex justify-content-center pt-4 ">
+          <!-- p id="sunIcon" class="fs-1 color-yellow "><i class="bi bi-brightness-high-fill"></i></p>< -->
+          <img id="pic" src="./haze.png" width="50px" height="50px">
+      </div>
+     <div class="text-center">
+        <h4 id="city" class="text-capitalize fs-5 text-white fw-600 py-2">Dhaka</h4>
+        <h4 class="text-capitalize fs-5 text-white fw-600 "><span id="tem"></span> <sup style="font-size: 10px;">o</sup></h4> 
+     </div>
+     <div class="w-100 d-flex justify-content-between py-2 px-5 ">
+        <div class="d-flex">
+          <p><svg width="30px" height="30px" viewBox="0 0 24 24" id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg"><defs><style>.cls-1{fill:none;stroke:#fefbfb;stroke-miterlimit:10;stroke-width:1.92px;}</style></defs>
+            <path class="cls-1" d="M.5,3.4c1.92,0,1.92.95,3.83.95S6.25,3.4,8.16,3.4s1.92.95,3.83.95,1.92-.95,3.83-.95,1.92.95,3.84.95,1.92-.95,3.84-.95"/><path class="cls-1" d="M.5,9.15c1.92,0,1.92.95,3.83.95s1.92-.95,3.83-.95,1.92.95,3.83.95,1.92-.95,3.83-.95,1.92.95,3.84.95,1.92-.95,3.84-.95"/>
+            <path class="cls-1" d="M.5,14.9c1.92,0,1.92.95,3.83.95s1.92-.95,3.83-.95,1.92.95,3.83.95,1.92-.95,3.83-.95,1.92.95,3.84.95,1.92-.95,3.84-.95"/>
+            <path class="cls-1" d="M.5,20.65c1.92,0,1.92,1,3.83,1s1.92-1,3.83-1,1.92,1,3.83,1,1.92-1,3.83-1,1.92,1,3.84,1,1.92-1,3.84-1"/></svg>
+          </p>
+          <p id="humidity" class="ps-2 fs-6 pt-1 text-white">5%</p>
+        </div>
+        <div class="d-flex justify-content-center">
+          <p class="">
+            <svg width="30px" height="30px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M2 15H18.5C20.43 15 22 16.57 22 18.5C22 20.43 20.43 22 18.5 22C16.57 22 15 20.43 15 18.5V18" stroke="#fefbfb" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+              <path opacity="0.4" d="M2 12H18.5C20.42 12 22 10.43 22 8.5C22 6.58 20.42 5 18.5 5C16.58 5 15 6.57 15 8.5V9" stroke="#fefbfb" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M2 9.00012H9.31C10.8 9.00012 12 7.79012 12 6.31012C12 4.82012 10.79 3.62012 9.31 3.62012C7.82 3.62012 6.62 4.83012 6.62 6.31012V6.69012" stroke="#fefbfb" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </p>
+          <p id="windSpeed" class="ps-2 fs-6 pt-1 text-white">32km/h</p>
+        </div>
+       
+     </div>
+    </section>
+</body>
+
+<script>
+
+  const apiKey = '454dd5e52a03436a4e55aecafad123dc';
+  const apiUrl = 'https://api.openweathermap.org/data/2.5/weather?units=metric&q='
+
+  const inputField = document.getElementById('cityName');
+  const city = document.querySelector('#city');
+  const tem = document.querySelector('#tem');
+  const humidity = document.querySelector('#humidity');
+  const windSpeed = document.querySelector('#windSpeed');
+  const picture = document.querySelector('#pic')
+
+   
+   async function checkWeather(city){
+  
+   await fetch(apiUrl + city +`&appid=${apiKey}`)
+   .then(response=> response.json())
+   .then(result=>{
+      console.log(result)
+      assignData(result);
+
+  })
+  .catch(error=>console.log(error))
+   
+
+  }
+
+  function assignData(result) {
+    city.innerHTML = result.name;
+    tem.innerHTML = Math.round(result.main.temp);
+    humidity.innerHTML = Math.round(result.main.humidity);
+    windSpeed.innerHTML = Math.round(result.wind.speed) + 'km/h';
+
+     if(result.weather[0].main == 'Haze'){
+        picture.src = "./haze.png"
+     }
+    else if (result.weather[0].main == 'Mist'){
+        picture.src = "./mist.png"
+        console.log('Mist')
+    }
+
+    else if (result.weather[0].main == 'Clouds'){
+        picture.src = "./clouds.png"
+        console.log('clouds')
+    }
+    else if (result.weather[0].main == 'Rain'){
+        picture.src = "./rain.png"
+        console.log('rain')
+    }else{
+      picture.src = "./sun.png"
+    }
+  }
+
+  function serchButton(){
+    checkWeather(inputField.value);
+  }
+
+
+
+</script>
+
+<!-- 2xx - Success series
+
+  200 - Ok
+  201 - Created
+  204 - No content
+
+3xx - Redirection
+
+  301 - Partial Redirection
+  302 - Permanent ''
+
+4xx - Authorization Error
+
+  400 - bad request
+  401 - unauthenticated
+  403 - unauthorized
+  404 - not found
+  405 - method not allowed
+  419 - token mismatch
+  422 - unprocessable entity
+
+5xx - Server error
+
+  500 - internal server error
+  502 - bad gateway
+  504 - gateway timeout -->
